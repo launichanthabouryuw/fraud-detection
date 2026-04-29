@@ -8,7 +8,7 @@ from features import build_model_frame
 from risk_rules import label_risk, score_transaction
 
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+DATA_DIR = Path(__file__).resolve().parent
 
 
 def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -49,6 +49,7 @@ def summarize_results(scored: pd.DataFrame, chargebacks: pd.DataFrame) -> pd.Dat
     )
 
     summary = summary.merge(fraud_by_label, on="risk_label", how="left")
+    summary["chargebacks"] = summary["chargebacks"].fillna(0).astype(int)
     summary["chargeback_rate"] = summary["chargebacks"] / summary["transactions"]
     return summary
 
